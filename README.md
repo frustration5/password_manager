@@ -19,13 +19,13 @@ file. The entries are indexed starting from 0.
 ## Planned features
 
 Better app security:
-    * password hashes
-    * protected password file
-    * configuration file to set and get from
+* password hashes
+* protected password file
+* configuration file to set and get from
 
 More password options:
-    * special characters
-    * change password character length generated
-    * 
+* special characters
+* change password character length generated
+* 
 
 ## Bugs
