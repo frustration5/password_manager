@@ -9,32 +9,34 @@ class MainWindow:
     def __init__(self):
         self.window = tk.Tk()   # Main window
         self.window.title("Schloker Password Manager")
+        self.window.config(width=800, height=800)
         # Canvas and settings to hold logo
-        self.w_canvas = tk.Canvas(self.window, width=200, height=200, )
+        self.w_canvas = tk.Canvas(self.window, width=200, height=200)
         self.main_img = tk.PhotoImage(file="./shlokerlogo.png")
-        self.w_canvas.create_image(101, 99, image=self.main_img)
+        self.w_canvas.create_image(99, 99, image=self.main_img)
         self.w_canvas.grid(row=0, column=1, pady=(20, 2))
         # Buttons, save password entry and generate password
-        self.save_b = tk.Button(self.window, text="Save Password Entry", font=("Consolas", 12, "bold"),
+        self.save_b = tk.Button(self.window, text="Save Password Entry", width=32, font=("Consolas", 12, "bold"),
                                 command=self.save_pw)
-        self.save_b.grid(row=4, column=1, pady=(0, 10))
+        self.save_b.grid(row=4, column=1, columnspan=2, sticky="w", pady=(2, 2))
         self.gen_pw_b = tk.Button(self.window, text="Generate", font=("Consolas", 10, "bold"),
-                                  command=self.populate_pw)
-        self.gen_pw_b.grid(row=3, column=2, padx=(0, 15))
+                                  command=self.populate_pw, width=12)
+        self.gen_pw_b.grid(row=3, column=2, sticky="w", padx=(0, 10))
         # Various labels for the window
         self.url_l = tk.Label(self.window, text="URL: ", font=("Consolas", 12, "bold"))
         self.pw_l = tk.Label(self.window, text="Password: ", font=("Consolas", 12, "bold"))
         self.usr_l = tk.Label(self.window, text="Username: ", font=("Consolas", 12, "bold"))
-        self.url_l.grid(row=1, column=0)
-        self.usr_l.grid(row=2, column=0)
-        self.pw_l.grid(row=3, column=0)
-        self.url_e = tk.Entry(self.window, width=30, font="Consolas")
-        self.pw_e = tk.Entry(self.window, width=20, font="Consolas")
-        self.usr_e = tk.Entry(self.window, width=30, font="Consolas")
+        self.url_l.grid(row=1, column=0, padx=(10, 0))
+        self.usr_l.grid(row=2, column=0, padx=(10, 0))
+        self.pw_l.grid(row=3, column=0, padx=(10, 0))
+        self.url_e = tk.Entry(self.window, width=32, font="Consolas")
+        self.url_e.focus()
+        self.pw_e = tk.Entry(self.window, width=22, font="Consolas")
+        self.usr_e = tk.Entry(self.window, width=32, font="Consolas")
         # Entry widgets for entering info to save
-        self.url_e.grid(row=1, column=1, columnspan=2, sticky="w")
+        self.url_e.grid(row=1, column=1, columnspan=2, sticky="w", padx=(0, 10))
         self.pw_e.grid(row=3, column=1, sticky="w")
-        self.usr_e.grid(row=2, column=1, columnspan=2, sticky="w")
+        self.usr_e.grid(row=2, column=1, columnspan=2, sticky="w", padx=(0, 10))
         self.password_length = 16
         # Defining the file path for keeping passwords and loading the contents for use
         self.pw_file = "./pws.json"
@@ -72,6 +74,9 @@ class MainWindow:
         else:
             self.pw_dict[len(self.pw_dict)] = {"Username": usr, "URL": url, "Password": pw}
             self.write_password_to_file()
+            self.url_e.delete(0, 'end')
+            self.usr_e.delete(0, 'end')
+            self.pw_e.delete(0, 'end')
 
     def write_password_to_file(self):
         with open(self.pw_file, "w") as file:

@@ -1,6 +1,6 @@
 
 # Welcome to Shloker
-
+### v0.10
 Here I will describe the functionality and planned future features of the Shloker application, a simple password manager.
 
 The obvious features like generating a password and saving entries per URL exist in this application
@@ -29,3 +29,9 @@ More password options:
 * 
 
 ## Bugs
+
+
+# Updates
+## v0.11
+- Clears the entries when saving
+- Aligned some widgets 
