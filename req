@@ -1,12 +1,9 @@
 Password manager
 - should hold passwords
     - for now passwords will be held in plain text
+    - hashed passwords improvement
 - generate a password for user
 - allows user to enter own password
 - relate the password typed to the entry or URL
 
 
-
-TODO
-- create the GUI layout
-- plan out functionality

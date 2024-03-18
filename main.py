@@ -46,7 +46,7 @@ class MainWindow:
         password_list = []
         a = "abcdefghijklmnopqrstuvwxyz"
         n = 1234567890
-        for n in range(1, self.password_length + 1):
+        for n in range(0, self.password_length + 1):
             if random.randint(0, 2) == 0:
                 password_list.append(random.choice(a))
             elif random.randint(0, 2) == 1:
