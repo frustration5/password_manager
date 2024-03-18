@@ -11,3 +11,21 @@ containing at least 1 of each:
 * upper case (ABC...)
 * number (123...)
 
+If you choose not to generate a password you can enter your own as well.
+
+The application prompts for URL of the username and password combination and then writes those entries as json to a 
+file. The entries are indexed starting from 0.
+
+## Planned features
+
+Better app security:
+    * password hashes
+    * protected password file
+    * configuration file to set and get from
+
+More password options:
+    * special characters
+    * change password character length generated
+    * 
+
+## Bugs
