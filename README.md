@@ -11,7 +11,8 @@ containing at least 1 of each:
 * upper case (ABC...)
 * number (123...)
 
-If you choose not to generate a password you can enter your own as well.
+If you choose not to generate a password you can enter your own as well. The copy button to the left of the save button 
+will copy whatever is in the password field to the clipboard.
 
 The application prompts for URL of the username and password combination and then writes those entries as json to a 
 file. The entries are indexed starting from 0.
@@ -34,4 +35,8 @@ More password options:
 # Updates
 ## v0.11
 - Clears the entries when saving
-- Aligned some widgets 
+- Aligned some widgets
+
+## v0.12
+- Added copy to clipboard button
+- Refactored some password generation code

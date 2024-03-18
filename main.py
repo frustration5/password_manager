@@ -3,11 +3,12 @@ from tkinter import messagebox
 import random
 import json
 import os
+import pyperclip
 
 
 class MainWindow:
     def __init__(self):
-        self.window = tk.Tk()   # Main window
+        self.window = tk.Tk()  # Main window
         self.window.title("Schloker Password Manager")
         self.window.config(width=800, height=800)
         # Canvas and settings to hold logo
@@ -22,6 +23,9 @@ class MainWindow:
         self.gen_pw_b = tk.Button(self.window, text="Generate", font=("Consolas", 10, "bold"),
                                   command=self.populate_pw, width=12)
         self.gen_pw_b.grid(row=3, column=2, sticky="w", padx=(0, 10))
+        self.copy_img = tk.PhotoImage(file="./copybutton.png").subsample(2, 2)
+        self.copy_b = tk.Button(self.window, image=self.copy_img, command=self.copy)
+        self.copy_b.grid(row=4, column=0)
         # Various labels for the window
         self.url_l = tk.Label(self.window, text="URL: ", font=("Consolas", 12, "bold"))
         self.pw_l = tk.Label(self.window, text="Password: ", font=("Consolas", 12, "bold"))
@@ -46,19 +50,12 @@ class MainWindow:
 
     def generate_password(self):
         password_list = []
-        a = "abcdefghijklmnopqrstuvwxyz"
-        n = 1234567890
+        a = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ/*!%$&@#"
         for n in range(0, self.password_length + 1):
-            if random.randint(0, 2) == 0:
-                password_list.append(random.choice(a))
-            elif random.randint(0, 2) == 1:
-                password_list.append(random.choice(str(n)))
-            else:
-                password_list.append(random.choice(a.upper()))
+            password_list.append(random.choice(a))
         password = "".join(password_list)
         text_var = tk.StringVar()
         text_var.set(password)
-        # print(password_list)
         return text_var
 
     def populate_pw(self):
@@ -72,11 +69,14 @@ class MainWindow:
             message = "One of the entries is empty, please fill in each field."
             tk.messagebox.showerror(title="Error", message=message)
         else:
-            self.pw_dict[len(self.pw_dict)] = {"Username": usr, "URL": url, "Password": pw}
-            self.write_password_to_file()
-            self.url_e.delete(0, 'end')
-            self.usr_e.delete(0, 'end')
-            self.pw_e.delete(0, 'end')
+            is_ok = messagebox.askokcancel(title="Confirm", message=f"Are you sure you want to save this entry?"
+                                                                    f"\nURL: {url}\nUsername: {usr}\nPassword: {pw}\n")
+            if is_ok:
+                self.pw_dict[len(self.pw_dict)] = {"Username": usr, "URL": url, "Password": pw}
+                self.write_password_to_file()
+                self.url_e.delete(0, 'end')
+                self.usr_e.delete(0, 'end')
+                self.pw_e.delete(0, 'end')
 
     def write_password_to_file(self):
         with open(self.pw_file, "w") as file:
@@ -95,6 +95,9 @@ class MainWindow:
                       "at the applications root path."
             tk.messagebox.showerror(title="Error", message=message)
             self.window.destroy()
+
+    def copy(self):
+        pyperclip.copy(self.pw_e.get())
 
 
 new_window = MainWindow()
