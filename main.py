@@ -11,6 +11,7 @@ class MainWindow:
         self.window = tk.Tk()  # Main window
         self.window.title("Schloker Password Manager")
         self.window.config(width=800, height=800)
+        self.password_length = 16
         # Canvas and settings to hold logo
         self.w_canvas = tk.Canvas(self.window, width=200, height=200)
         self.main_img = tk.PhotoImage(file="./shlokerlogo.png")
@@ -19,13 +20,16 @@ class MainWindow:
         # Buttons, save password entry and generate password
         self.save_b = tk.Button(self.window, text="Save Password Entry", width=32, font=("Consolas", 12, "bold"),
                                 command=self.save_pw)
-        self.save_b.grid(row=4, column=1, columnspan=2, sticky="w", pady=(2, 2))
+        self.save_b.grid(row=4, column=1, sticky="w", pady=(2, 2))
         self.gen_pw_b = tk.Button(self.window, text="Generate", font=("Consolas", 10, "bold"),
                                   command=self.populate_pw, width=12)
         self.gen_pw_b.grid(row=3, column=2, sticky="w", padx=(0, 10))
         self.copy_img = tk.PhotoImage(file="./copybutton.png").subsample(2, 2)
         self.copy_b = tk.Button(self.window, image=self.copy_img, command=self.copy)
         self.copy_b.grid(row=4, column=0)
+        self.search = tk.Button(self.window, text="Search", font=("Consolas", 10, "bold"), width=12,
+                                command=self.search_passwords)
+        self.search.grid(row=1, column=2, sticky="w", padx=(0, 10))
         # Various labels for the window
         self.url_l = tk.Label(self.window, text="URL: ", font=("Consolas", 12, "bold"))
         self.pw_l = tk.Label(self.window, text="Password: ", font=("Consolas", 12, "bold"))
@@ -33,15 +37,14 @@ class MainWindow:
         self.url_l.grid(row=1, column=0, padx=(10, 0))
         self.usr_l.grid(row=2, column=0, padx=(10, 0))
         self.pw_l.grid(row=3, column=0, padx=(10, 0))
+        # Entry widgets for entering info to save
         self.url_e = tk.Entry(self.window, width=32, font="Consolas")
         self.url_e.focus()
-        self.pw_e = tk.Entry(self.window, width=22, font="Consolas")
+        self.pw_e = tk.Entry(self.window, width=32, font="Consolas")
         self.usr_e = tk.Entry(self.window, width=32, font="Consolas")
-        # Entry widgets for entering info to save
-        self.url_e.grid(row=1, column=1, columnspan=2, sticky="w", padx=(0, 10))
+        self.url_e.grid(row=1, column=1, sticky="w")
         self.pw_e.grid(row=3, column=1, sticky="w")
-        self.usr_e.grid(row=2, column=1, columnspan=2, sticky="w", padx=(0, 10))
-        self.password_length = 16
+        self.usr_e.grid(row=2, column=1, sticky="w", padx=(0, 10), columnspan=2)
         # Defining the file path for keeping passwords and loading the contents for use
         self.pw_file = "./pws.json"
         self.pw_dict = self.load_password_from_file()
@@ -79,25 +82,39 @@ class MainWindow:
                 self.pw_e.delete(0, 'end')
 
     def write_password_to_file(self):
-        with open(self.pw_file, "w") as file:
-            json.dump(self.pw_dict, file)
+        try:
+            with open(self.pw_file, "w") as file:
+                json.dump(self.pw_dict, file, indent=4)
+        except FileNotFoundError:
+            with open(self.pw_file, "x") as file:
+                json.dump(self.pw_dict, file)
 
     def load_password_from_file(self):
-        if os.path.exists(self.pw_file):
+        try:
             with open(self.pw_file, "r") as file:
-                try:
-                    return json.load(file)
-                except json.decoder.JSONDecodeError:
-                    return {}
-        else:
-            message = "Password file is missing! Please create a .json file " \
+                return json.load(file)
+        except FileNotFoundError:
+            message = "Password file is missing! Creating a json file " \
                       "to store passwords " \
                       "at the applications root path."
             tk.messagebox.showerror(title="Error", message=message)
-            self.window.destroy()
+            return {}
+
+    def search_passwords(self):
+        self.load_password_from_file()
+        for entry in self.pw_dict:
+            if self.pw_dict[str(entry)]["URL"] == self.url_e.get():
+                text_var_usr = tk.StringVar()
+                text_var_pw = tk.StringVar()
+                text_var_usr.set(self.pw_dict[str(entry)]["Username"])
+                self.usr_e.config(textvariable=text_var_usr)
+                text_var_pw.set(self.pw_dict[str(entry)]["Password"])
+                self.pw_e.config(textvariable=text_var_pw)
 
     def copy(self):
         pyperclip.copy(self.pw_e.get())
 
 
+
 new_window = MainWindow()
+
