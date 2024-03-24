@@ -40,3 +40,6 @@ More password options:
 ## v0.12
 - Added copy to clipboard button
 - Refactored some password generation code
+
+## v0.13
+- Added search for passwords by URL

@@ -4,7 +4,7 @@ import random
 import json
 import os
 import pyperclip
-
+import pprint
 
 class MainWindow:
     def __init__(self):
@@ -99,17 +99,26 @@ class MainWindow:
                       "at the applications root path."
             tk.messagebox.showerror(title="Error", message=message)
             return {}
+        except ValueError:
+            return {}
 
     def search_passwords(self):
         self.load_password_from_file()
-        for entry in self.pw_dict:
-            if self.pw_dict[str(entry)]["URL"] == self.url_e.get():
+        usernames = [i[1]["Username"] for i in self.pw_dict.items()]
+        urls = [i[1]["URL"] for i in self.pw_dict.items()]
+        passwords = [i[1]["Password"] for i in self.pw_dict.items()]
+        for i in urls:
+            if i == self.url_e.get():
+                idx = urls.index(i)
                 text_var_usr = tk.StringVar()
-                text_var_pw = tk.StringVar()
-                text_var_usr.set(self.pw_dict[str(entry)]["Username"])
+                text_var_usr.set(usernames[idx])
                 self.usr_e.config(textvariable=text_var_usr)
-                text_var_pw.set(self.pw_dict[str(entry)]["Password"])
+                text_var_pw = tk.StringVar()
+                text_var_pw.set(passwords[idx])
                 self.pw_e.config(textvariable=text_var_pw)
+            else:
+                message = "No Password/username found for the searched URL."
+                tk.messagebox.showerror(title="Error", message=message)
 
     def copy(self):
         pyperclip.copy(self.pw_e.get())
